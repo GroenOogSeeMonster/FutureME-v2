@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Uncompleted Tasks and Goals</h1>
+    <form action="" method="post">
+        {{ task_form.hidden_tag() }}
+        {{ task_form.task.label }} {{ task_form.task }}
+        <p>{{ task_form.submit() }}</p>
+    </form>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.task }}</li>
+        {% endfor %}
+    </ul>
+    <form action="" method="post">
+        {{ goal_form.hidden_tag() }}
+        {{ goal_form.goal.label }} {{ goal_form.goal }}
+        {{ goal_form.description.label }} {{ goal_form.description }}
+        <p>{{ goal_form.submit() }}</p>
+    </form>
+    <ul>
+        {% for goal in goals %}
+            <li>{{ goal.goal }}: {{ goal.description }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

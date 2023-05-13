@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Welcome, {{ current_user.name }}!</h1>
+    <h2>Your Progress</h2>
+    <ul>
+        {% for assessment in assessments %}
+            <li>{{ assessment.name }}: {{ current_user.progress(assessment) }}%</li>
+        {% endfor %}
+    </ul>
+    <h2>Your Routines</h2>
+    {% for routine in routines %}
+        <div>
+            <p>{{ routine.body }}</p>
+            <small>{{ routine.timestamp }}</small>
+        </div>
+    {% endfor %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.body.label }}<br>
+            {{ form.body(size=32) }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

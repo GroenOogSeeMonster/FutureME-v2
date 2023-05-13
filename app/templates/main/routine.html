@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Your Routine</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.day_of_week.label }} {{ form.day_of_week }}
+        {{ form.start_time.label }} {{ form.start_time }}
+        {{ form.end_time.label }} {{ form.end_time }}
+        {{ form.activity.label }} {{ form.activity }}
+        <p>{{ form.submit() }}</p>
+    </form>
+    <table>
+        {% for routine in routines %}
+            <tr>
+                <td>{{ routine.day_of_week }}</td>
+                <td>{{ routine.start_time }}</td>
+                <td>{{ routine.end_time }}</td>
+                <td>{{ routine.activity }}</td>
+                <td><a href="{{ url_for('main.edit_routine', id=routine.id) }}">Edit</a></td>
+                <td><a href="{{ url_for('main.delete_routine', id=routine.id) }}">Delete</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
