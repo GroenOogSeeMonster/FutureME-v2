@@ -1,9 +1,12 @@
-from flask import render_template, request, redirect, url_for, flash
+import io
+from reportlab.pdfgen import canvas
+from flask import render_template, request, redirect, url_for, flash, send_file
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from app import db
 from app.main import bp
-from app.main.forms import RoutineForm
-from app.models import Assessment, Routine
+from app.main.forms import RoutineForm, SurveyForm, WritingForm, GoalForm, JournalEntryForm, UncompletedTaskForm, ScheduleForm
+from app.models import Assessment, Routine, Question, Response, Prompt, WritingResponse, GoalCategory, Goal, JournalEntry
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/home', methods=['GET', 'POST'])
@@ -20,9 +23,6 @@ def home():
     assessments = Assessment.query.all()
     return render_template('main/home.html', form=form, routines=routines, assessments=assessments)
 
-from app.main.forms import SurveyForm
-from app.models import Question, Response
-
 @bp.route('/assessment/1', methods=['GET', 'POST'])
 @login_required
 def assessment_1():
@@ -34,9 +34,6 @@ def assessment_1():
         db.session.commit()
         return redirect(url_for('main.assessment_1'))
     return render_template('main/assessment_1.html', form=form, question=question)
-
-from app.main.forms import WritingForm
-from app.models import Prompt, WritingResponse
 
 @bp.route('/assessment/2', methods=['GET', 'POST'])
 @login_required
@@ -50,9 +47,6 @@ def assessment_2():
         return redirect(url_for('main.assessment_2'))
     return render_template('main/assessment_2.html', form=form, prompt=prompt)
 
-from app.main.forms import GoalForm
-from app.models import GoalCategory, Goal
-
 @bp.route('/assessment/3', methods=['GET', 'POST'])
 @login_required
 def assessment_3():
@@ -64,9 +58,6 @@ def assessment_3():
         db.session.commit()
         return redirect(url_for('main.assessment_3'))
     return render_template('main/assessment_3.html', form=form, category=category)
-
-from app.main.forms import JournalEntryForm
-from app.models import JournalEntry, Goal
 
 @bp.route('/assessment/4', methods=['GET', 'POST'])
 @login_required
@@ -80,23 +71,18 @@ def assessment_4():
         return redirect(url_for('main.assessment_4'))
     return render_template('main/assessment_4.html', form=form, goal=goal)
 
-from app.main.forms import RoutineForm
-from app.models import Routine
-
 @bp.route('/routine', methods=['GET', 'POST'])
 @login_required
 def routine():
     form = RoutineForm()
     if form.validate_on_submit():
-        routine = Routine(user=current_user, day_of_week=form.day_of_week.data, start_time=form.start_time.data, end_time=form.end_time.data, activity=form.activity.data)
+        routine = Routine(user=current_user, day_of_week=form.day_of_week.data, start_time=form.start_time.data, end_time=form.end_time.data
+        activity=form.activity.data)
         db.session.add(routine)
         db.session.commit()
         return redirect(url_for('main.routine'))
     routines = current_user.routines.order_by(Routine.day_of_week, Routine.start_time).all()
     return render_template('main/routine.html', form=form, routines=routines)
-
-from flask import send_file
-from app.models import Goal
 
 @bp.route('/schedule', methods=['GET'])
 @login_required
@@ -136,9 +122,9 @@ def tasks_and_goals():
     goals = current_user.goals.all()
     return render_template('main/tasks_and_goals.html', task_form=task_form, goal_form=goal_form, tasks=tasks, goals=goals)
 
-@bp.route('/schedule', methods=['GET', 'POST'])
+@bp.route('/schedule_form', methods=['GET', 'POST'])
 @login_required
-def schedule():
+def schedule_form():
     form = ScheduleForm()
     if form.validate_on_submit():
         schedule = Schedule(user=current_user, day=form.day.data, hour=int(form.hour.data), activity=form.activity.data)

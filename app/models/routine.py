@@ -9,4 +9,4 @@ class Routine(db.Model):
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     activity = db.Column(db.String(120), nullable=False)
-    user = db.relationship('User', backref='routines', lazy='dynamic')
+    user = db.relationship('User', backref='routines')
