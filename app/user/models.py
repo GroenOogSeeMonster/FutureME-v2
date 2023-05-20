@@ -1,6 +1,16 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import db, login_manager
+from app import login_manager
+from app.database import db
+from datetime import datetime
+
+class Assessment1Result(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    answer1 = db.Column(db.String(1000))
+    answer2 = db.Column(db.String(1000))
+    answer3 = db.Column(db.String(1000))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'

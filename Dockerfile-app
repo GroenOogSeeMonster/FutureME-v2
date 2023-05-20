@@ -5,7 +5,18 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y mariadb-client-10.5
 
 COPY . .
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+# add the wait script
+COPY wait-for-mysql.sh /wait-for-mysql.sh
+COPY db_check.py /db_check.py
+RUN chmod +x /wait-for-mysql.sh
+
+# Set the environment variable
+ENV PYTHONPATH='/app'
+ENV SQLALCHEMY_DATABASE_URI='mysql://fmsa:fmsa-1598753@db/futureme'
+
+#CMD ["flask", "run", "--host=0.0.0.0"]
+ENTRYPOINT ["/wait-for-mysql.sh", "db", "flask", "run", "--host=0.0.0.0"]

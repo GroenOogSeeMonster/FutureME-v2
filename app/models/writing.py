@@ -1,5 +1,5 @@
 from app import db
-from app.models import User
+from app.user.models import User
 
 class Prompt(db.Model):
     __tablename__ = 'prompts'

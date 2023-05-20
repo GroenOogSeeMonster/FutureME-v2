@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>VIA Character Strengths Survey</h1>
+    <h1>Personal Assessment</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p>{{ question.text }}</p>
-        {{ form.response }}
+        <p>You have three minutes to tell me about the most interesting thing about yourself:</p>
+        <textarea name="answer1" required></textarea>
+        <p>Now in 5 minutes tell me a bit more about what you enjoy the most:</p>
+        <textarea name="answer2" required></textarea>
+        <p>Quickly, in 5 minutes tell me what you imagine is the perfect career where someone with these interests:</p>
+        <textarea name="answer3" required></textarea>
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}
