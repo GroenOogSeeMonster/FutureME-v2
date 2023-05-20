@@ -13,3 +13,4 @@ Werkzeug
 celery
 python-dotenv
 email_validator
+redis

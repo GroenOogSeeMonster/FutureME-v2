@@ -19,7 +19,7 @@ def login():
             return redirect(url_for('user.login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('main.home'))
-    return render_template('user/login.html', title='Sign In', form=form)
+    return render_template('main/login.html', title='Sign In', form=form)
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():

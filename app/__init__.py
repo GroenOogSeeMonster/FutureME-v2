@@ -26,13 +26,15 @@ def create_app():
     # Schedule job for sending emails
     if not app.debug:
         scheduler = BackgroundScheduler()
-        scheduler.add_job(func=send_schedule_email, trigger="cron", day_of_week='sun', hour=18)
+        from app.main.email import send_schedule_email
+        scheduler.add_job(func=send_schedule_email, args=[app], trigger="cron", day_of_week='sun', hour=18)
         scheduler.start()
 
     return app
 
-from celery import Celery
+flask_app = create_app()
 
+from celery import Celery
 def make_celery(app):
     celery = Celery(
         app.import_name,

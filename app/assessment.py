@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+
 from . import db
-from .models import User, Assessment1Result, AssessmentResult
-import datetime
+from .user.models import Assessment1Result
 
 assessment = Blueprint('assessment', __name__)
 
@@ -18,7 +17,7 @@ def assessment1():
         db.session.add(result)
         db.session.commit()
         return redirect(url_for('assessment.assessment2'))
-    return render_template("assessment_1.html")  # This page should contain your form for the writing exercise
+    return render_template("main/assessment_1.html")  # This page should contain your form for the writing exercise
 
 @assessment.route('/assessment2', methods=['GET', 'POST'])
 @login_required
